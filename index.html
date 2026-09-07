@@ -1,0 +1,56 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#111827"><meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Goal 62"><link rel="manifest" href="manifest.webmanifest">
+<title>Goal 62</title>
+<style>
+:root{--bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#687386;--line:#e4e8ef;--accent:#2563eb;--good:#16803c}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;color:var(--text)}
+main{max-width:760px;margin:auto;padding:18px 14px 40px}h1{font-size:28px;margin:0}.sub{color:var(--muted);font-size:14px;margin:3px 0 16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin:12px 0}.hero{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.metric{padding:14px;background:#f8fafc;border-radius:14px}.label{font-size:13px;color:var(--muted)}.value{font-size:23px;font-weight:750;margin-top:4px}
+.bar{height:12px;background:#e9edf3;border-radius:99px;overflow:hidden;margin-top:12px}.fill{height:100%;background:var(--accent);border-radius:99px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}label{font-size:13px;color:var(--muted)}input{width:100%;margin-top:6px;border:1px solid var(--line);border-radius:11px;padding:11px;font-size:16px}
+button{border:0;border-radius:12px;min-height:44px;padding:10px 14px;font-weight:650;font-size:15px;background:var(--accent);color:white}.secondary{background:#eef2f7;color:var(--text)}
+.actions{display:flex;gap:8px;flex-wrap:wrap}.table{width:100%;border-collapse:collapse;font-size:14px}.table th,.table td{text-align:left;padding:10px 5px;border-bottom:1px solid var(--line)}.table th{color:var(--muted)}.right{text-align:right}.good{color:var(--good);font-weight:700}.small{font-size:12px;color:var(--muted);line-height:1.45}
+@media(max-width:480px){.value{font-size:21px}.table{font-size:13px}}
+</style></head><body><main>
+<h1>Goal 62 🎯</h1><div class="sub">Long-term calorie & weight tracker</div>
+<section class="card"><div class="hero">
+<div class="metric"><div class="label">Current weight</div><div class="value" id="cw">—</div></div>
+<div class="metric"><div class="label">Final goal</div><div class="value">62 kg</div></div>
+<div class="metric"><div class="label">Running deficit</div><div class="value" id="td">0 kcal</div></div>
+<div class="metric"><div class="label">Fat-equivalent*</div><div class="value" id="fe">0.00 kg</div></div>
+</div><div style="margin-top:14px;font-size:14px;font-weight:700">Progress to 62 kg</div>
+<div class="bar"><div class="fill" id="pf" style="width:0%"></div></div>
+<div class="sub" id="ms" style="margin-top:8px">Milestones: 68 kg → 65 kg → 62 kg</div></section>
+
+<section class="card"><h2 style="font-size:18px;margin:0 0 12px">Add / update a day</h2>
+<form id="f"><div class="grid">
+<label>Date<input id="d" type="date" required></label><label>Weight kg<input id="w" type="number" min="30" max="200" step=".1"></label>
+<label>Food intake kcal<input id="i" type="number" min="0" max="10000" step="10" required></label>
+<label>Apple Watch total kcal<input id="b" type="number" min="0" max="10000" step="10" required></label>
+</div><div class="actions" style="margin-top:12px"><button>Save day</button><button type="button" class="secondary" id="cl">Clear</button></div></form></section>
+
+<section class="card"><div style="display:flex;justify-content:space-between;align-items:center"><h2 style="font-size:18px;margin:0">History</h2><button type="button" class="secondary" id="ex">Export</button></div>
+<div style="overflow-x:auto"><table class="table"><thead><tr><th>Date</th><th>Intake</th><th>Watch</th><th class="right">Deficit</th><th class="right">Weight</th></tr></thead><tbody id="h"></tbody></table></div></section>
+<div class="small">*7,700 kcal/kg is only a rough mathematical conversion, not a prediction of scale weight. Apple Watch calories are estimates. Data stays on this device; use Export for backup.</div>
+</main>
+<script>
+const K="goal62-v1";let data=JSON.parse(localStorage.getItem(K)||"null")||[
+{date:"2026-09-01",intake:1570,burn:2149,weight:null},{date:"2026-09-02",intake:2025,burn:2218,weight:null},
+{date:"2026-09-03",intake:null,burn:null,weight:null},{date:"2026-09-04",intake:null,burn:null,weight:null},
+{date:"2026-09-05",intake:1590,burn:2341,weight:null},{date:"2026-09-06",intake:1600,burn:1585,weight:null},
+{date:"2026-09-07",intake:1300,burn:2340,weight:null}];
+const $=x=>document.getElementById(x),fmt=n=>Math.round(n).toLocaleString("en-IN");
+function save(){localStorage.setItem(K,JSON.stringify(data))}
+function render(){let t=0,lw=null;data.forEach(x=>{if(Number.isFinite(x.intake)&&Number.isFinite(x.burn))t+=x.burn-x.intake;if(Number.isFinite(x.weight))lw=x.weight});
+$("td").textContent=fmt(t)+" kcal";$("fe").textContent=(t/7700).toFixed(2)+" kg";$("cw").textContent=lw==null?"—":lw.toFixed(1)+" kg";
+$("pf").style.width=(lw==null?0:Math.max(0,Math.min(100,(lw-62)/8*100)))+"%";$("ms").textContent=lw==null?"Milestones: 68 kg → 65 kg → 62 kg":`Current ${lw.toFixed(1)} kg · next milestone ${lw>68?68:lw>65?65:62} kg`;
+$("h").innerHTML="";[...data].sort((a,b)=>b.date.localeCompare(a.date)).forEach(x=>{let z=x.intake!=null&&x.burn!=null?x.burn-x.intake:null,tr=document.createElement("tr");
+tr.innerHTML=`<td>${x.date.slice(5)}</td><td>${x.intake==null?"—":fmt(x.intake)}</td><td>${x.burn==null?"—":fmt(x.burn)}</td><td class="right ${z>=0?"good":""}">${z==null?"—":fmt(z)}</td><td class="right">${x.weight==null?"—":x.weight.toFixed(1)}</td>`;tr.onclick=()=>load(x);$("h").appendChild(tr)})}
+function load(x){$("d").value=x.date;$("w").value=x.weight??"";$("i").value=x.intake??"";$("b").value=x.burn??"";scrollTo(0,0)}
+$("f").onsubmit=e=>{e.preventDefault();let x={date:$("d").value,intake:Number($("i").value),burn:Number($("b").value),weight:$("w").value===""?null:Number($("w").value)},n=data.findIndex(y=>y.date===x.date);if(n>=0)data[n]=x;else data.push(x);save();render();e.target.reset()};
+$("cl").onclick=()=>$("f").reset();$("ex").onclick=()=>{let a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:"application/json"}));a.download="goal62-backup.json";a.click()};
+$("d").value=new Date().toISOString().slice(0,10);render();if("serviceWorker"in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
+</script></body></html>
