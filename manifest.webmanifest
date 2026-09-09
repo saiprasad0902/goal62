@@ -1,8 +1,11 @@
 {
   "name": "Goal 62",
   "short_name": "Goal 62",
-  "start_url": ".",
+  "description": "Simple weight-loss and calorie tracking app",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#f5f7fb",
-  "theme_color": "#111827"
+  "theme_color": "#f5f7fb",
+  "orientation": "portrait"
 }
